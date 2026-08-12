@@ -2,6 +2,12 @@
 ruff check --select I --fix . && ruff format .
 ```
 
+## Pipeline walkthrough
+
+See [`examples/llm_data_pipeline_walkthrough.ipynb`](examples/llm_data_pipeline_walkthrough.ipynb)
+for a small, offline walkthrough of the repository's data-preparation components,
+their schema boundaries, and the optional production-scale stages.
+
 ## AI-content domain review
 
 AI-content detection is a review workflow rather than an automatic source-of-truth
