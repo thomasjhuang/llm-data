@@ -11,7 +11,7 @@ from llm_data.config import (
 )
 
 
-def _parse_netloc_for_host(netloc):
+def _parse_netloc_for_host(netloc: str) -> str:
     # Parses user:pass@host or host:port into host
     return netloc.rsplit("@", 1)[-1].split(":", 1)[0].strip().lower().rstrip("/")
 
@@ -34,7 +34,7 @@ def _download_default_blacklist(
 
 
 @daft.func
-def extract_domain(url: str) -> str:
+def extract_domain(url: str | None) -> str | None:
     """Extract the bare, lowercased hostname from a URL.
 
     Handles CommonCrawl-style URLs with ports, userinfo, and session ids
@@ -43,15 +43,21 @@ def extract_domain(url: str) -> str:
      consulta/especie;jsessionid=mY8n3kSFVokUvnGHh3GEpWUm.undefined"
     -> "01.vistaalegredoalto.sp.gov.br"
     """
+    if url is None:
+        return None
+
     netloc = urlparse(url).netloc
     return _parse_netloc_for_host(netloc)
 
 
 @daft.func
-def is_blacklisted_domain(domain: str, blacklist: frozenset) -> bool:
+def is_blacklisted_domain(domain: str | None, blacklist: frozenset[str]) -> bool:
     """Check a domain against a blacklist, matching the domain itself
     or any of its parent domains (so 'ads.badsite.com' matches a
     blacklist entry of 'badsite.com')."""
+
+    if not domain:
+        return False
 
     labels = domain.split(".")
     for i in range(len(labels)):
